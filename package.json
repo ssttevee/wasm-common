@@ -1,0 +1,11 @@
+{
+    "name": "wasm-common",
+    "version": "0.1.0",
+    "license": "MIT",
+    "scripts": {
+        "install": "tsc --module commonjs --target esnext memory.ts"
+    },
+    "dependencies": {
+        "typescript": "^3.5.1"
+    }
+}
