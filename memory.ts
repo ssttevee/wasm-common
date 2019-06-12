@@ -1,3 +1,5 @@
+export type CopySource = string | BufferSource;
+
 export default class Memory {
     private _memory: WebAssembly.Memory;
     private _view: Uint8Array;
@@ -12,9 +14,21 @@ export default class Memory {
         return this._memory;
     }
 
-    public copyIn(src: Uint8Array): number {
-        const ptr = this.alloc(src.length);
-        this._view.set(src, ptr);
+    public copyIn(src: CopySource): number {
+        if (typeof src === 'string') {
+            var input = new Uint8Array(src.split('').map((c) => c.charCodeAt(0)));
+        } else if (src instanceof Uint8Array) {
+            var input = src;
+        } else if (src instanceof ArrayBuffer) {
+            var input = new Uint8Array(src);
+        } else if (ArrayBuffer.isView(src)) {
+            var input = new Uint8Array(src.buffer);
+        } else {
+            throw new Error('unexpected type: ' + typeof src);
+        }
+
+        const ptr = this.alloc(input.length);
+        this._view.set(input, ptr);
         return ptr;
     }
 
